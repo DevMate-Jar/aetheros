@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>AetherOS</title>
+  <link rel="stylesheet" href="estilo.css">
+  <style>
+    body {
+      margin:0;
+      font-family:sans-serif;
+      background:#1e1e1e;
+      color:white;
+      overflow:hidden;
+    }
+    .desktop { 
+      position:relative;
+      width:100%; height:100vh; 
+      background:url('https://wallpaperaccess.com/full/5651980.jpg') center/cover no-repeat;
+    }
+    .icon {
+      width:80px; text-align:center;
+      margin:10px; cursor:pointer;
+      display:inline-block;
+    }
+    .window {
+      position:absolute;
+      top:100px; left:100px;
+      width:300px; height:auto;
+      background:#333;
+      border:2px solid #555;
+      display:none;
+      box-shadow:0 4px 8px rgba(0,0,0,0.5);
+      border-radius:8px;
+    }
+    .titlebar {
+      background:#222;
+      padding:5px;
+      cursor:move;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .titlebar .buttons {
+      display:flex; gap:5px;
+    }
+    .btn {
+      width:15px; height:15px;
+      border-radius:50%;
+      cursor:pointer;
+    }
+    .close-btn { background:red; }
+    .min-btn { background:yellow; }
+    .max-btn { background:green; }
+    .taskbar {
+      position:absolute;
+      bottom:0; left:0; right:0;
+      height:40px; background:#222;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 10px;
+    }
+    .start { cursor:pointer; padding:5px; background:#444; border-radius:4px; }
+    .task-icons { display:flex; gap:10px; }
+    .menu-inicio {
+      position:absolute;
+      bottom:40px; left:10px;
+      background:#2c2c2c;
+      padding:10px; border-radius:5px;
+      display:none; flex-direction:column; gap:5px;
+    }
+    .menu-inicio button {
+      background:#444; color:white; border:none;
+      padding:5px; border-radius:3px; cursor:pointer;
+    }
+    .profile-btn {
+      background:#555; color:white; border:none; padding:5px; border-radius:3px; cursor:pointer;
+      margin:5px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="desktop" id="desktop">
+  <!-- Iconos del escritorio -->
+  <div class="icon" id="iconNotas" onclick="openWindow('notas')"><div>✍🏻</div><span>Notas</span></div>
+  <div class="icon" id="iconCalc" onclick="openWindow('calc')"><div>🧮</div><span>Calculadora</span></div>
+  <div class="icon" id="iconTerm" onclick="openWindow('term')"><div>🖥️</div><span>Terminal</span></div>
+  <div class="icon" id="iconCalendar" onclick="openWindow('calendar')"><div>📅</div><span>Calendario</span></div>
+  <div class="icon" id="iconBuscar" onclick="buscar()"><div>🌐</div><span>Buscar</span></div>
+  <div class="icon" id="iconMusica" onclick="window.open('https://music.youtube.com/', '_blank')"><div>🎵</div><span>Música</span></div>
+  <div class="icon" id="iconTrash" onclick="openWindow('trash')"><div>🗑️</div><span>Papelera</span></div>
+  <div class="icon" id="iconPerformance" onclick="openWindow('performance')">
+  <div>📊</div>
+  <span>Rendimiento</span>
+</div>
+
+ 
+  <!-- Notas -->
+  <div class="window" id="notas">
+    <div class="titlebar">
+      Bloc de notas
+      <div class="buttons">
+        <div class="btn min-btn" onclick="minimizeWindow('notas')"></div>
+        <div class="btn max-btn" onclick="maximizeWindow('notas')"></div>
+        <div class="btn close-btn" onclick="closeWindow('notas')"></div>
+      </div>
+    </div>
+    <div class="content">
+      <textarea id="noteText" rows="8" style="width:100%">Escribe lo que quieras!</textarea>
+      <br>
+      <button onclick="saveNote()">Guardar</button>
+      <button onclick="discardNote()">Descartar</button>
+      <button onclick="deleteNote()">Borrar</button>
+      <p id="noteStatus"></p>
+    </div>
+  </div>
+
+  <!-- Calculadora -->
+  <div class="window" id="calc">
+    <div class="titlebar">
+      Calculadora
+      <div class="buttons">
+        <div class="btn min-btn" onclick="minimizeWindow('calc')"></div>
+        <div class="btn max-btn" onclick="maximizeWindow('calc')"></div>
+        <div class="btn close-btn" onclick="closeWindow('calc')"></div>
+      </div>
+    </div>
+    <div class="content">
+      <input type="number" id="n1" placeholder="Número 1">
+      <input type="number" id="n2" placeholder="Número 2"><br><br>
+      <button onclick="operar('sumar')">Sumar!</button>
+      <button onclick="operar('restar')">Restar!</button>
+      <button onclick="operar('multiplicar')">Multiplicar!</button>
+      <button onclick="operar('dividir')">Dividir!</button>
+      <p id="resultado"></p>
+    </div>
+  </div>
+
+  <!-- Calendario -->
+  <div class="window" id="calendar">
+    <div class="titlebar">
+      Calendario
+      <div class="buttons">
+        <div class="btn min-btn" onclick="minimizeWindow('calendar')"></div>
+        <div class="btn max-btn" onclick="maximizeWindow('calendar')"></div>
+        <div class="btn close-btn" onclick="closeWindow('calendar')"></div>
+      </div>
+    </div>
+    <div class="content"><p id="calendarDisplay"></p></div>
+  </div>
+
+  <!-- Terminal -->
+  <div class="window" id="term">
+    <div class="titlebar">
+      Terminal
+      <div class="buttons">
+        <div class="btn min-btn" onclick="minimizeWindow('term')"></div>
+        <div class="btn max-btn" onclick="maximizeWindow('term')"></div>
+        <div class="btn close-btn" onclick="closeWindow('term')"></div>
+      </div>
+    </div>
+    <div class="content"><pre>Hola! Este es un mensaje oculto 
+de nuestro proyecto hehe</pre></div>
+  </div>
+
+  <!-- Papelera -->
+  <div class="window" id="trash">
+    <div class="titlebar">
+      Papelera
+      <div class="buttons">
+        <div class="btn close-btn" onclick="closeWindow('trash')"></div>
+      </div>
+    </div>
+    <div class="content"><ul id="trashList"></ul></div>
+  </div>
+
+  <!-- Ventana Rendimiento -->
+<div class="window" id="performance">
+  <div class="titlebar">
+    Rendimiento
+    <div class="buttons">
+      <div class="btn min-btn" onclick="minimizeWindow('performance')"></div>
+      <div class="btn max-btn" onclick="maximizeWindow('performance')"></div>
+      <div class="btn close-btn" onclick="closeWindow('performance')"></div>
+    </div>
+  </div>
+  <div class="content" style="padding:10px;">
+    <div style="margin-bottom:5px;">CPU Usage:</div>
+    <div style="width:100%; height:20px; background:#555; border-radius:5px; overflow:hidden; margin-bottom:10px;">
+      <div id="perfCpu" style="height:100%; width:70%; background:#f44336; transition: width 0.5s;"></div>
+    </div>
+    <div style="margin-bottom:5px;">RAM Usage:</div>
+    <div style="width:100%; height:20px; background:#555; border-radius:5px; overflow:hidden;">
+      <div id="perfRam" style="height:100%; width:65%; background:#4CAF50; transition: width 0.5s;"></div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Acerca de -->
+  <div class="window" id="about">
+    <div class="titlebar">
+      Acerca de este sistema
+      <div class="buttons">
+        <div class="btn close-btn" onclick="closeWindow('about')"></div>
+      </div>
+    </div>
+    <div class="content" style="padding:10px;">
+      <h3>Sistema Operativo</h3>
+      <p id="versionInfo">Versión 17.0<br>Estas al día con las actualizaciones!</p>
+      <p id="licenciaInfo">Actualmente contás con la versión GRATUITA.</p>
+    </div>
+  </div>
+
+  <!-- Seguridad -->
+  <div class="window" id="security">
+    <div class="titlebar">
+      Seguridad del sistema
+      <div class="buttons">
+        <div class="btn close-btn" onclick="closeWindow('security')"></div>
+      </div>
+    </div>
+    <div class="content" style="padding:10px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="font-size:40px; color:#4CAF50;">🛡️</div>
+        <h3>Tu sistema está protegido</h3>
+      </div>
+      <ul>
+        <li>Antivirus activo</li>
+        <li>Firewall activado</li>
+        <li>Protección en tiempo real</li>
+        <li>Actualizaciones automáticas</li>
+        <li>Protección contra malware y spyware</li>
+        <li>Copia de seguridad activada</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Perfiles -->
+  <div class="window" id="business">
+    <div class="titlebar">
+      Perfiles
+      <div class="buttons">
+        <div class="btn close-btn" onclick="closeWindow('business')"></div>
+      </div>
+    </div>
+    <div class="content" style="padding:10px;">
+      <p>Selecciona un perfil:</p>
+      <button class="profile-btn" onclick="restaurarNormal()">Sin perfil</button>
+      <button class="profile-btn" onclick="seleccionarPerfil('oficina')">Oficina</button>
+      <button class="profile-btn" onclick="seleccionarPerfil('creacion')">Creación</button>
+      <button class="profile-btn" onclick="seleccionarPerfil('rendimiento')">Rendimiento</button>
+    </div>
+  </div>
+
+  <!-- SOPORTE como si fuera un chat -->
+  <div class="window" id="soporte">
+    <div class="titlebar">
+      Soporte 24/7
+      <div class="buttons">
+        <div class="btn close-btn" onclick="closeWindow('soporte')"></div>
+      </div>
+    </div>
+    <div class="content" style="padding:10px;">
+      <div id="chatBox" style="height:200px; overflow-y:auto; background:#222; padding:5px; border-radius:5px; margin-bottom:5px;">
+        <div><strong>Soporte:</strong> Hola! Este es el soporte 24/7 exclusivo de tu plan! Gracias por elegirnos!</div>
+      </div>
+      <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." style="width:70%; padding:5px;">
+      <button onclick="sendMessage()" style="padding:5px;">Enviar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Barra de tareas -->
+<div class="taskbar">
+  <div class="start">Inicio</div>
+  <div class="task-icons">
+    <div class="task-icon" onclick="openWindow('notas')">✍🏻</div>
+    <div class="task-icon" onclick="openWindow('calc')">🧮</div>
+    <div class="task-icon" onclick="openWindow('term')">🖥️</div>
+    <div class="task-icon" onclick="openWindow('calendar')">📅</div>
+  </div>
+  <div class="clock" id="clock"></div>
+</div>
+
+<!-- Menú Inicio -->
+<div class="menu-inicio" id="menuInicio">
+  <button onclick="apagar()">Apagar</button>
+  <button onclick="cambiarFondo()">Cambiar fondo</button>
+  <button onclick="toggleTheme()">Modo oscuro/claro</button>
+  <button onclick="openAbout()">Acerca de</button>
+  <button onclick="openSecurity()">Seguridad</button>
+  <button id="btnMejorar" onclick="mejorarVersion()">Mejorar a Business</button>
+  <button id="btnEnterprise" onclick="mejorarVersionEnterprise()">Actualizar a Enterprise</button>
+  <button onclick="abrirBusiness()">Perfiles</button>
+</div>
+
+<script>
+let zIndex = 10;
+let savedNote = "";
+let trash = [];
+let currentProfile = "";
+let userPlan = "gratis";
+
+// Abrir ventanas
+function openWindow(id) {
+  const win = document.getElementById(id);
+  
+  win.style.display = 'block';
+  win.style.zIndex = ++zIndex;
+}
+
+// Cerrar, minimizar y maximizar
+function closeWindow(id) { document.getElementById(id).style.display = 'none'; }
+function minimizeWindow(id) { document.getElementById(id).style.display = 'none'; }
+function maximizeWindow(id) { 
+  const win = document.getElementById(id);
+  if (win.style.width === "100%") {
+    win.style.width = "300px";
+    win.style.height = "auto";
+    win.style.top = "100px";
+    win.style.left = "100px";
+  } else {
+    win.style.width = "100%";
+    win.style.height = "90%";
+    win.style.top = "0";
+    win.style.left = "0";
+  }
+}
+
+// Draggable
+function makeDraggable(win) {
+  const bar = win.querySelector(".titlebar");
+  let offsetX=0, offsetY=0, isDown=false;
+  bar.addEventListener("mousedown", (e)=>{
+    isDown = true;
+    offsetX = e.clientX - win.offsetLeft;
+    offsetY = e.clientY - win.offsetTop;
+  });
+  document.addEventListener("mouseup", ()=> isDown=false);
+  document.addEventListener("mousemove", (e)=>{
+    if (!isDown) return;
+    win.style.left = (e.clientX - offsetX)+"px";
+    win.style.top = (e.clientY - offsetY)+"px";
+  });
+}
+document.querySelectorAll(".window").forEach(makeDraggable);
+
+// Calculadora
+function operar(op) {
+  const n1 = parseFloat(document.getElementById('n1').value) || 0;
+  const n2 = parseFloat(document.getElementById('n2').value) || 0;
+  let res = 0;
+  switch(op) {
+    case 'sumar': res = n1 + n2; break;
+    case 'restar': res = n1 - n2; break;
+    case 'multiplicar': res = n1 * n2; break;
+    case 'dividir': res = n2!==0 ? n1/n2 : "Error: No se puede dividir por 0"; break;
+  }
+  document.getElementById('resultado').textContent = "Resultado: " + res;
+}
+
+// Notas
+function saveNote() {
+  savedNote = document.getElementById('noteText').value;
+  document.getElementById('noteStatus').textContent = "Nota guardada.";
+}
+function discardNote() {
+  document.getElementById('noteText').value = savedNote;
+  document.getElementById('noteStatus').textContent = "Cambios descartados.";
+}
+function deleteNote() {
+  trash.push(savedNote);
+  document.getElementById("trashList").innerHTML = trash.map(n=>"<li>"+n+"</li>").join("");
+  savedNote="";
+  document.getElementById('noteText').value="";
+  document.getElementById('noteStatus').textContent="Nota enviada a la papelera.";
+}
+
+// Calendario
+function updateCalendarWindow() {
+  const now = new Date();
+  const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('calendarDisplay').textContent = 
+    `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+}
+document.getElementById('calendar').addEventListener('mousedown', updateCalendarWindow);
+
+// Reloj
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+// Buscar
+function buscar() {
+  const query = prompt("¿Qué quieres buscar?");
+  if (query) window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`,'_blank');
+}
+
+// Menú inicio
+document.querySelector('.start').addEventListener('click', ()=>{
+  const menu = document.getElementById("menuInicio");
+  menu.style.display = menu.style.display==="flex" ? "none":"flex";
+});
+
+// Apagar
+function apagar() {
+  alert("Apagando...");
+  setTimeout(()=>window.close(),2000);
+}
+
+// Cambiar fondo
+function cambiarFondo() {
+  document.getElementById("desktop").style.backgroundImage = "url('https://wallpaper.dog/large/10818932.jpg')";
+}
+
+// Tema oscuro/claro
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  if(document.body.classList.contains("light")) {
+    document.body.style.background="#eee"; document.body.style.color="black";
+  } else {
+    document.body.style.background="#1e1e1e"; document.body.style.color="white";
+  }
+}
+
+// Abrir ventanas
+function openAbout() { openWindow('about'); }
+function openSecurity() { openWindow('security'); }
+
+// Mejorar a Business
+function mejorarVersion() {
+  document.getElementById('versionInfo').innerHTML = "Versión 17.0 Business<br>Todas las funciones desbloqueadas!";
+  document.getElementById('licenciaInfo').textContent = "Actualmente contás con la versión BUSINESS.";
+  const btn = document.getElementById('btnMejorar');
+  btn.textContent = "Versión mejorada.";
+  btn.disabled = true;
+  btn.style.opacity = "0.6";
+  userPlan = "business";
+}
+
+// Actualizar a Enterprise
+function mejorarVersionEnterprise() {
+  if(userPlan!=="business"){
+    alert("Primero debes actualizar a Business!");
+    return;
+  }
+  userPlan="enterprise";
+  document.getElementById('versionInfo').innerHTML = "Versión 17.0 Enterprise<br>Todas las funciones desbloqueadas!";
+  document.getElementById('licenciaInfo').textContent = "Actualmente contás con la versión ENTERPRISE.";
+
+  // Crear icono SOPORTE cuando se actualiza a enterprise
+  if(!document.getElementById("iconSoporte")){
+    const div = document.createElement("div");
+    div.className = "icon";
+    div.id = "iconSoporte";
+    div.innerHTML = `<div>🛎️</div><span>SOPORTE</span>`;
+    div.onclick = ()=> openWindow('soporte');
+    document.getElementById("desktop").appendChild(div);
+  }
+
+  // Ocultar botón Enterprise
+  const btn = document.getElementById("btnEnterprise");
+  if(btn) btn.style.display="none";
+}
+
+// Perfiles
+function abrirBusiness() {
+  openWindow('business');
+}
+
+// Seleccionar perfil
+function seleccionarPerfil(perfil) {
+  currentProfile = perfil;
+  document.querySelectorAll('.tempIcon').forEach(e=>e.remove());
+  document.querySelectorAll('.icon').forEach(e=>e.style.display='inline-block');
+
+  switch(perfil){
+    case "oficina":
+      hideIcons(["iconMusica","iconTerm"]);
+      addTempIcon("📊","Planilla");
+      addTempIcon("📈","Gráficos");
+      break;
+    case "creacion":
+      hideIcons(["iconCalendar","iconCalc"]);
+      addTempIcon("🎨","Diseño");
+      addTempIcon("✏️","Editor");
+      break;
+    case "rendimiento":
+      hideIcons(["iconNotas"]);
+      addTempIcon("⚡","Agilizar PC");
+      break;
+  }
+}
+
+function restaurarNormal() {
+  currentProfile = "normal";
+
+  // Mostrar todos los íconos
+  document.querySelectorAll('.icon').forEach(e => e.style.display = 'inline-block');
+  // Eliminar íconos temporales
+  document.querySelectorAll('.tempIcon').forEach(e => e.remove());
+  // Restaurar fondo original
+  document.getElementById("desktop").style.backgroundImage = "url('https://wallpaperaccess.com/full/5651980.jpg')";
+  // Restaurar valores normales de CPU y RAM
+  cpuUsage = 70;
+  ramUsage = 65;
+  document.getElementById('perfCpu').style.width = cpuUsage + "%";
+  document.getElementById('perfCpu').textContent = cpuUsage + "%";
+  document.getElementById('perfRam').style.width = ramUsage + "%";
+  document.getElementById('perfRam').textContent = ramUsage + "%";
+}
+
+
+// Perfiles
+function hideIcons(ids){ ids.forEach(id=>{ const e=document.getElementById(id); if(e) e.style.display='none'; }); }
+function addTempIcon(emoji,name){
+  const div = document.createElement("div");
+  div.className="icon tempIcon";
+  div.innerHTML = `<div>${emoji}</div><span>${name}</span>`;
+  document.getElementById("desktop").appendChild(div);
+}
+
+// Chat soporte
+function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if(text==="") return;
+
+  const chat = document.getElementById("chatBox");
+  const userMsg = document.createElement("div");
+  userMsg.innerHTML = `<strong>Tú:</strong> ${text}`;
+  chat.appendChild(userMsg);
+
+  const respMsg = document.createElement("div");
+  respMsg.innerHTML = `<strong>Soporte:</strong> Gracias por tu mensaje! Nuestro equipo revisará tu consulta.`;
+  chat.appendChild(respMsg);
+
+  chat.scrollTop = chat.scrollHeight;
+  input.value = "";
+}
+let cpuUsage = 70;
+let ramUsage = 65;
+function updatePerformance() {
+  if(currentProfile==="oficina"){
+    cpuUsage -= Math.random() * 2;
+    ramUsage -= Math.random() * 4;
+  } else if(currentProfile==="rendimiento"){
+    cpuUsage -= Math.random() * 25;
+    ramUsage -= Math.random() * 25;
+  } else {
+    cpuUsage += Math.random() * 1 - 1;
+    ramUsage += Math.random() * 1 - 1;
+  }
+
+  cpuUsage = Math.min(Math.max(cpuUsage, 50), 100);
+  ramUsage = Math.min(Math.max(ramUsage, 50), 100);
+
+  document.getElementById('perfCpu').style.width = cpuUsage.toFixed(0) + "%";
+  document.getElementById('perfCpu').textContent = cpuUsage.toFixed(0) + "%";
+
+  document.getElementById('perfRam').style.width = ramUsage.toFixed(0) + "%";
+  document.getElementById('perfRam').textContent = ramUsage.toFixed(0) + "%";
+}
+setInterval(updatePerformance, 1000);
+updatePerformance();
+
+</script>
+</body>
+</html>
