@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0a1a2f, #142b47);
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Escritorio */
+.desktop {
+  position: relative;
+  height: 100%;
+  padding: 20px;
+}
+
+.icon {
+  width: 80px;
+  text-align: center;
+  margin: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.icon div {
+  width: 64px;
+  height: 64px;
+  background: #2d4d7a;
+  margin: auto;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.icon:hover div {
+  transform: scale(1.1);
+  background: #3e5d96;
+}
+
+.icon span {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+/* Barra de inicio */
+.start {
+  background: #2d4d7a;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.start:hover {
+  background: #3e5d96;
+}
+
+/* Ventanas */
+.window {
+  width: 300px;
+  background: #1e2d4a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  display: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+.titlebar {
+  background: #2d4d7a;
+  padding: 6px;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: #ff4d4d;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  line-height: 18px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #ff6666;
+}
+
+.content {
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* Botones */
+input[type="number"], textarea {
+  width: 100%;
+  background: #1e2d4a;
+  border: 1px solid #555;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  background: #34495e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+button:hover {
+  background: #3d566e;
+}
+
+/* Barra de tareas */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.task-icons {
+  display: flex;
+  gap: 15px;
+  font-size: 20px;
+}
+
+.task-icon {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.task-icon:hover {
+  transform: scale(1.2);
+}
+
+/* Reloj */
+.clock {
+  font-size: 14px;
+  margin-left: auto;
+}
