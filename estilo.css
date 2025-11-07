@@ -1,26 +1,22 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0a1a2f, #142b47);
-  color: #fff;
-  height: 100vh;
-  overflow: hidden;
-}
+    body {
+      margin:0;
+      font-family:sans-serif;
+      background:#1e1e1e;
+      color:white;
+      overflow:hidden;
+    }
+    .desktop { 
+      position:relative;
+      width:100%; height:100vh; 
+      background:url('https://wallpaperaccess.com/full/5651980.jpg') center/cover no-repeat;
+    }
+    .icon {
+      width:80px; text-align:center;
+      margin:10px; cursor:pointer;
+      display:inline-block;
+    }
 
-/* Escritorio */
-.desktop {
-  position: relative;
-  height: 100%;
-  padding: 20px;
-}
 
-.icon {
-  width: 80px;
-  text-align: center;
-  margin: 10px;
-  display: inline-block;
-  cursor: pointer;
-}
 
 .icon div {
   width: 64px;
@@ -59,17 +55,7 @@ body {
 }
 
 /* Ventanas */
-.window {
-  width: 300px;
-  background: #1e2d4a;
-  border: 1px solid #444;
-  border-radius: 8px;
-  position: absolute;
-  top: 100px;
-  left: 100px;
-  display: none;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-}
+
 
 .titlebar {
   background: #2d4d7a;
@@ -162,3 +148,58 @@ button:hover {
   font-size: 14px;
   margin-left: auto;
 }
+
+
+.window {
+      position:absolute;
+      top:100px; left:100px;
+      width:300px; height:auto;
+      background:#333;
+      border:2px solid #555;
+      display:none;
+      box-shadow:0 4px 8px rgba(0,0,0,0.5);
+      border-radius:8px;
+    }
+    .titlebar {
+      background:#222;
+      padding:5px;
+      cursor:move;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .titlebar .buttons {
+      display:flex; gap:5px;
+    }
+    .btn {
+      width:15px; height:15px;
+      border-radius:50%;
+      cursor:pointer;
+    }
+    .close-btn { background:red; }
+    .min-btn { background:yellow; }
+    .max-btn { background:green; }
+    .taskbar {
+      position:absolute;
+      bottom:0; left:0; right:0;
+      height:40px; background:#222;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 10px;
+    }
+    .start { cursor:pointer; padding:5px; background:#444; border-radius:4px; }
+    .task-icons { display:flex; gap:10px; }
+    .menu-inicio {
+      position:absolute;
+      bottom:40px; left:10px;
+      background:#2c2c2c;
+      padding:10px; border-radius:5px;
+      display:none; flex-direction:column; gap:5px;
+    }
+    .menu-inicio button {
+      background:#444; color:white; border:none;
+      padding:5px; border-radius:3px; cursor:pointer;
+    }
+    .profile-btn {
+      background:#555; color:white; border:none; padding:5px; border-radius:3px; cursor:pointer;
+      margin:5px 0;
+    }
